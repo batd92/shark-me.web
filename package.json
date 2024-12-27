@@ -2,7 +2,7 @@
     "name": "pub-apis",
     "version": "1.2.0",
     "private": true,
-    "author": "sozonome",
+    "author": "apt92",
     "scripts": {
         "preinstall": "npx only-allow pnpm",
         "dev": "next dev",
