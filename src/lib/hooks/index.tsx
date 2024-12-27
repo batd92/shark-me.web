@@ -1,0 +1,1 @@
+export { useMobileDetect } from './useMobileDetect';
