@@ -7,11 +7,11 @@ const defaultSEOConfig = {
     canonical: '',
     openGraph: {
         url: '',
-        title: 'pub-apis',
+        title: 'apt92',
         description: 'Find public APT for your next projects.',
         images: [
         ],
-        site_name: 'publicapis',
+        site_name: '',
     },
     twitter: {
 
