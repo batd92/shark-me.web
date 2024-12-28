@@ -7,6 +7,7 @@ const CARD_COUNT_PER_ROW = 3;
 const TOTAL_ROWS = 3;
 
 type CardType = 'short' | 'long';
+const Titles = ['BEP 20', 'Vesting', 'Staking', 'DEX', 'Buy Course'];
 
 interface CardData {
     id: number;
@@ -17,7 +18,7 @@ interface CardData {
 const generateFakeData = (): CardData[] => {
     return Array.from({ length: TOTAL_ROWS * CARD_COUNT_PER_ROW }, (_, i) => ({
         id: i + 1,
-        title: `Card ${i + 1}`,
+        title: `${Titles[Math.floor(Math.random() * Titles.length)]}`,
         navigation: `image`,
     }));
 };
