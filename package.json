@@ -4,20 +4,12 @@
     "private": true,
     "author": "apt92",
     "scripts": {
-        "preinstall": "npx only-allow pnpm",
         "dev": "next dev",
         "build": "next build",
-        "postbuild": "next-sitemap --config next-sitemap.config.js",
         "start": "next start",
         "lint": "next lint",
         "lint:fix": "eslint src --fix && pnpm format",
         "format": "prettier --write src",
-        "check:turbo": "pnpm dlx turbo@2.0.9 lint type-check",
-        "type-check": "tsc --noEmit",
-        "up-interactive": "pnpm up -i",
-        "up-latest": "pnpm up-interactive -L",
-        "release": "standard-version",
-        "push-release": "git push --follow-tags origin main",
         "prepare": "husky"
     },
     "dependencies": {
@@ -77,8 +69,6 @@
         "typescript": "^5.4.5"
     },
     "engines": {
-        "node": ">=16.8.x",
-        "pnpm": ">=8"
-    },
-    "packageManager": "pnpm@9.6.0"
+        "node": ">=16.8.x"
+    }
 }
