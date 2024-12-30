@@ -5,9 +5,29 @@ import { useRouter } from 'next/navigation';
 
 const CARD_COUNT_PER_ROW = 3;
 const TOTAL_ROWS = 3;
-
+const Titles = [
+    {
+        name: 'BEP 20',
+        link: 'erc-20'
+    },
+    {
+        name: 'Vesting',
+        link: 'vesting',
+    },
+    {
+        name: 'Staking',
+        link: 'staking',
+    },
+    {
+        name: 'DEX',
+        link: 'dex'
+    },
+    {
+        name: 'Course',
+        link: 'course'
+    }
+];
 type CardType = 'short' | 'long';
-const Titles = ['BEP 20', 'Vesting', 'Staking', 'DEX', 'Buy Course'];
 
 interface CardData {
     id: number;
@@ -16,11 +36,14 @@ interface CardData {
 }
 
 const generateFakeData = (): CardData[] => {
-    return Array.from({ length: TOTAL_ROWS * CARD_COUNT_PER_ROW }, (_, i) => ({
-        id: i + 1,
-        title: `${Titles[Math.floor(Math.random() * Titles.length)]}`,
-        navigation: `image`,
-    }));
+    return Array.from({ length: TOTAL_ROWS * CARD_COUNT_PER_ROW }, (_, i) => {
+        const randomTitle = Titles[Math.floor(Math.random() * Titles.length)];
+        return {
+            id: i + 1,
+            title: randomTitle.name,
+            navigation: randomTitle.link,
+        };
+    });
 };
 
 const getCardStyle = (
