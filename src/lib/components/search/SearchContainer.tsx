@@ -38,7 +38,7 @@ import { ScrollArea } from '@/lib/components/ui/scroll-area';
 import { Skeleton } from '@/lib/components/ui/skeleton';
 import { useToast } from '@/lib/components/ui/use-toast';
 import type { SearchForm } from '@/lib/models/searchForm';
-import { useApiList } from '@/lib/services/publicapis/list/hooks';
+import { useApiList } from '@/lib/services/apis/list/hooks';
 import { cn } from '@/lib/styles/utils';
 
 import type { SearchContainerProps } from './types';

@@ -12,10 +12,10 @@ import "@rainbow-me/rainbowkit/styles.css";
 import type { Metadata } from "next";
 import Providers from '@/lib/components/providers';
 export const metadata: Metadata = {
-    title: "Web3 | Rainbowkit + Wagmi + Nextjs",
-    description: "Web3 | Rainbowkit + Wagmi + Nextjs Cryptocurrency App",
+    title: "APT92 | Rainbowkit + Wagmi + SharkMe",
+    description: "APT92 | SharkMe App",
     icons: {
-        icon: "/rainbow.png",
+        //icon: "/rainbow.png",
     },
 };
 
@@ -36,7 +36,6 @@ const RootLayout = ({ children }: RootLayoutProps) => {
                     <Toaster />
                 </Providers>
             </body>
-            {/* <BotScriptLoader /> */}
         </html>
     );
 };

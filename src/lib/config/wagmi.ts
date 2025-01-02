@@ -9,7 +9,7 @@ const projectId = "fe1a8424a43c2a990f595862bd4bc5b8";
 const supportedChains: Chain[] = [mainnet, sepolia, bscTestnet, blastSepolia];
 
 export const config = getDefaultConfig({
-    appName: "WalletConnection",
+    appName: "SharkMe",
     projectId,
     chains: supportedChains as any,
     ssr: true,

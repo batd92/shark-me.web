@@ -1,10 +1,13 @@
-import React, { useRef, useState, useEffect } from "react";
-import { Input } from "@/lib/components/ui/input";
+import React, { useState } from "react";
 import { Button } from "@/lib/components/ui/button";
-import Link from "next/link";
 
 const Course: React.FC = () => {
-    
+    const [isPurchased, setIsPurchased] = useState(false);
+
+    const handlePurchase = () => {
+        setIsPurchased(true);
+    };
+
     return (
         <div
             style={{
@@ -42,9 +45,23 @@ const Course: React.FC = () => {
                         <strong>Typography</strong> is the art and technique of arranging type to
                         make written language legible, readable, and appealing when displayed.
                     </p>
+                    <div style={{ marginTop: "16px" }}>
+                        <Button
+                            onClick={handlePurchase}
+                            disabled={isPurchased}
+                            style={{
+                                width: "100%",
+                                backgroundColor: isPurchased ? "#d1d5db" : "#3b82f6",
+                                color: "#ffffff",
+                                cursor: isPurchased ? "not-allowed" : "pointer",
+                            }}
+                        >
+                            {isPurchased ? "Đã Mua" : "Mua Khóa Học"}
+                        </Button>
+                    </div>
                 </div>
             </div>
-        </div> 
+        </div>
     );
 };
 

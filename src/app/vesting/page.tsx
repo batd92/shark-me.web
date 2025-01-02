@@ -2,7 +2,7 @@
 
 import Vesting from "@/lib/pages/vesting";
 
-const VestingPage = async () => {
+const VestingPage = () => {
     return <Vesting />;
 };
 

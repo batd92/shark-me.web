@@ -58,7 +58,7 @@ const getCardStyle = (
     justifyContent: 'center',
     alignItems: 'center',
     fontWeight: 'bold',
-    color: 'white',
+    color: 'black',
     cursor: 'pointer',
     textAlign: 'center',
 });

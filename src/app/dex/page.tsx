@@ -2,7 +2,7 @@
 
 import Dex from "@/lib/pages/dex";
 
-const DexPage = async () => {
+const DexPage = () => {
     return <Dex />;
 };
 

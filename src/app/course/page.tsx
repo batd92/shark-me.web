@@ -2,7 +2,7 @@
 
 import Course from "@/lib/pages/course";
 
-const CoursePage = async () => {
+const CoursePage = () => {
     return <Course />;
 };
 
