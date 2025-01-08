@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { ThemeToggle } from '@/lib/components/theme-toggle';
+import { WalletConnect } from '../components/wallet-connect';
 
 import AppMenu from './AppMenu';
 
@@ -19,6 +20,7 @@ const Header = () => {
             </div>
             <div className="ml-auto flex flex-[40%] items-center justify-end gap-2 text-right">
                 <AppMenu />
+                <WalletConnect />
                 <ThemeToggle />
             </div>
         </header>
