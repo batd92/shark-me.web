@@ -11,44 +11,87 @@ import {
     Heading,
     Link
 } from "@radix-ui/themes";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
+import { APP_ADDRESSES } from "@/lib/constants/addresses";
+import { ChainId } from "@/lib/constants/chainId";
+import { useAccount } from 'wagmi'
+
+
+import { StakingSMAService } from "../../services/blockchains/staking_service";
+import { useTokenService } from "../../services/blockchains/sma_service";
 
 const APYRates = [
-    {
-        duration: '7 days',
-        rate: '10%',
-    },
-    {
-        duration: '30 days',
-        rate: '20%',
-    },
-    {
-        duration: '60 days',
-        rate: '30%',
-    }
+    { duration: '7 days', rate: '10%', lockTime: 604800 },
+    { duration: '30 days', rate: '20%', lockTime: 2592000 },
+    { duration: '60 days', rate: '30%', lockTime: 5184000 }
 ];
+
 
 const Staking: React.FC = () => {
     const router = useRouter();
+    const { address } = useAccount();
+    const stakingSMAService = new StakingSMAService(APP_ADDRESSES[ChainId.SEPOLIA]["STAKING"]);
+       const {
+            getBalance,
+            approve,
+            getName,
+            getTotalSupply,
+        } = useTokenService();
+
     const [selectedValue, setSelectedValue] = useState("1");
     const [amountApprove, setAmountApprove] = useState(0);
     const [amountWithdraw, setAmountWithdraw] = useState(0);
+    const [yourSMA, setYourSMA] = useState(0);
+    const [totalLocked, setTotalLocked] = useState(0);
+    const [minBalance, setMinBalance] = useState(0);
+    const [stakingInfo, setStakingInfo] = useState({
+        balance: 0,
+        lastClaimTimestamp: 0,
+        unlockTimestamp: 0,
+        yearlyReward: 0
+    });
 
-    const handleRadioChange = (value: string) => {
-        setSelectedValue(value);
-    };
 
     const selectedRate = APYRates[parseInt(selectedValue) - 1];
+    const handleRadioChange = (value: string) => setSelectedValue(value);
 
-    const handleApprove = () => {
-        console.log("Approve clicked for amount:", amountApprove);
+    const fetchUserDetails = useCallback(async () => {
+        if (!address) return;
+
+        try {
+            const [totalLockedValue, minBalanceValue, stakingData] = await Promise.all([
+                stakingSMAService.getTotalLocked(),
+                stakingSMAService.getMinBalance(),
+                stakingSMAService.getUserDetails(address)
+            ]);
+
+            setYourSMA(getBalance());
+            setTotalLocked(totalLockedValue);
+            setMinBalance(minBalanceValue);
+            setStakingInfo(stakingData);
+        } catch (error) {
+            console.error("Error fetching user details:", error);
+        }
+    }, [address]);
+
+
+    useEffect(() => {
+        fetchUserDetails();
+    }, [fetchUserDetails]);
+
+    const handleApprove = async () => {
+        if (amountApprove < minBalance || amountApprove > yourSMA) {
+            alert("Please adjust the amount you want to stake accordingly.");
+        }
+
+        // stake
+        await stakingSMAService.stake(amountApprove.toString(), APYRates[(+selectedValue) - 1].lockTime);
     };
 
     const handleWithdraw = () => {
         console.log("Withdraw clicked for amount:", amountWithdraw);
     };
-
     return (
         <div className="space-y-8 p-6">
             <Box>
@@ -65,13 +108,13 @@ const Staking: React.FC = () => {
                 >
                     <RadioCards.Item value="1" disabled>
                         <Flex direction="column" width="100%" align="start">
-                            <Text weight="bold" color="orange">$ 63,939,379</Text>
+                            <Text weight="bold" color="orange">$ {totalLocked}</Text>
                             <Text>Total Value Locked</Text>
                         </Flex>
                     </RadioCards.Item>
                     <RadioCards.Item value="2" disabled>
                         <Flex direction="column" width="100%" align="start">
-                            <Text weight="bold" color="orange">136.99 %</Text>
+                            <Text weight="bold" color="orange">{APYRates[APYRates.length - 1].rate} %</Text>
                             <Text>APY Rate</Text>
                         </Flex>
                     </RadioCards.Item>
@@ -127,7 +170,7 @@ const Staking: React.FC = () => {
                 <Box style={{ gridColumn: "span 1" }}>
                     <Flex direction="column" gap="4">
                         <Box>
-                            <Badge color="orange" style={{ height: '30px', marginBottom: '10px' }}>Amount: 350.70 BUSD</Badge>
+                            <Badge color="orange" style={{ height: '30px', marginBottom: '10px' }}>Amount: {yourSMA} SMA</Badge>
                             <TextField.Root
                                 size="3"
                                 placeholder="Number ..."
@@ -142,7 +185,7 @@ const Staking: React.FC = () => {
                             </TextField.Root>
                         </Box>
                         <Box style={{ marginTop: '30px' }}>
-                            <Badge color="orange" style={{ height: '30px', marginBottom: '10px' }}>Staked: 350.70 BUSD</Badge>
+                            <Badge color="orange" style={{ height: '30px', marginBottom: '10px' }}>Staked: {stakingInfo.balance} SMA</Badge>
                             <TextField.Root
                                 size="3"
                                 placeholder="Number ..."

@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useAccount, useContractReads } from "wagmi";
-import { SharkMe } from "../../constants/abis";
-import { APP_ADDRESSES } from "@/lib/constants/addresses";
-import { ChainId } from "@/lib/constants/chainId";
-import { ethers } from "ethers";
+import React, { useState } from "react";
+import { useAccount } from "wagmi";
 import { useRouter } from 'next/navigation';
 import { Box, Link, Grid, Heading, Text, Flex, RadioCards, Blockquote, Code } from "@radix-ui/themes";
+import { useTokenService } from "@/lib/services/blockchains/sma_service";
 
 const erc20Functions = [
     { name: "name", description: "Returns the name of the token." },
@@ -23,35 +20,46 @@ const ERC20: React.FC = () => {
     const router = useRouter();
     const [selectedIndex, setSelectedIndex] = useState<number | null>(0);
     const [result, setResult] = useState<string | undefined>("");
-    const { address } = useAccount();
+    const { address, isConnected } = useAccount();
 
-    const { data, isLoading, isError } = useContractReads({
-        contracts: [
-            {
-                address: APP_ADDRESSES[ChainId.SEPOLIA]["SMA"] as `0x${string}`,
-                abi: SharkMe,
-                functionName: selectedIndex !== null ? erc20Functions[selectedIndex]?.name : "name",
-                args: selectedIndex === 4 && address ? [address] : [],
-            },
-        ],
-    });
-
-    useEffect(() => {
-        if (data && data[0].status === "success" && selectedIndex) {
-            if ([1, 4].includes(selectedIndex) && data[0].result) {
-                const bigNumber = ethers.toBigInt(data[0].result.toString());
-                const formattedValue = ethers.formatUnits(bigNumber, 18);
-                setResult(formattedValue);
-            } else {
-                setResult(data[0].result?.toString() || "");
-            }
-        }
-    }, [data, selectedIndex]);
+    const {
+        getBalance,
+        approve,
+        getName,
+        getTotalSupply,
+        getOwner,
+        getSymbol,
+        transfer,
+        transferFrom 
+    } = useTokenService();
 
     const handleRadioChange = (value: string) => {
-        setSelectedIndex(+value - 1);
-    };
+        if (!address || !isConnected) {
+            alert('Please connect your wallet !');
+            return;
+        }
 
+        const idx = +value - 1;
+        setSelectedIndex(idx);
+
+        const selectedFunction = erc20Functions[idx];
+    
+        const fnMap: Record<string, (() => any) | undefined> = {
+            balanceOf: getBalance,
+            totalSupply: getTotalSupply,
+            name: getName,
+            owner: getOwner,
+            symbol: getSymbol,
+            approve: () => approve("1000000000000000000"),
+        };
+    
+        const fn = fnMap[selectedFunction.name];
+        if (fn) {
+            const result = fn();
+            setResult(result.toString());
+        }
+    };
+    
     return (
         <div className="space-y-8 p-6">
             <Box>

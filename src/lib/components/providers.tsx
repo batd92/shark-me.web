@@ -1,6 +1,6 @@
 "use client";
 
-import { useTheme } from "next-themes";  // Sử dụng hook từ next-themes
+import { useTheme } from "next-themes";
 import { WagmiProvider, cookieToInitialState } from "wagmi";
 import { RainbowKitProvider, darkTheme, lightTheme } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

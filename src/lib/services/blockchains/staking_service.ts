@@ -1,13 +1,15 @@
 import { Contract, Interface } from "ethers";
 import { Providers } from "../../config/providers";
 import { ChainId } from "../../constants/chainId";
+import { Staking_ABI } from "@/lib/constants/abis";
+import { ethers } from "ethers";
 
 export class StakingSMAService {
     private contract: Contract;
 
-    constructor(address: string, ABI: Interface, chainId: ChainId) {
-        const provider = Providers.getStaticProvider(chainId);
-        this.contract = new Contract(address, ABI, provider);
+    constructor(address: string) {
+        const provider = Providers.getStaticProvider(ChainId.SEPOLIA);
+        this.contract = new Contract(address, Staking_ABI, provider);
     }
 
     private async handleTransaction(txPromise: Promise<any>): Promise<void> {
@@ -24,8 +26,8 @@ export class StakingSMAService {
         return await this.contract.owner();
     }
 
-    async stake(amount: string, lockTime: string): Promise<void> {
-        await this.handleTransaction(this.contract.stake(amount, lockTime));
+    async stake(amount: string, lockTime: number): Promise<void> {
+        await this.handleTransaction(this.contract.stake(this.parseAmount(amount), lockTime));
     }
 
     async claim(): Promise<string> {
@@ -42,8 +44,8 @@ export class StakingSMAService {
         return await this.contract.getRewardOf(account);
     }
 
-    async getMinBalance(): Promise<string> {
-        return await this.contract.minBalance();
+    async getMinBalance(): Promise<number> {
+        return this.formatBigInt(await this.contract.minBalance());
     }
 
     async withdraw(force: boolean = false): Promise<void> {
@@ -71,17 +73,22 @@ export class StakingSMAService {
     }
 
     async getUserDetails(address: string): Promise<{
-        balance: string;
-        lastClaimTimestamp: string;
-        unlockTimestamp: string;
-        yearlyReward: string;
+        balance: number;
+        lastClaimTimestamp: number;
+        unlockTimestamp: number;
+        yearlyReward: number;
     }> {
         const [balance, lastClaimTimestamp, unlockTimestamp, yearlyReward] = await this.contract.users(address);
-        return { balance, lastClaimTimestamp, unlockTimestamp, yearlyReward };
+        return { 
+            balance: this.formatBalance(balance), 
+            lastClaimTimestamp: this.formatBigInt(lastClaimTimestamp), 
+            unlockTimestamp: this.formatBigInt(unlockTimestamp), 
+            yearlyReward: this.formatBigInt(yearlyReward)
+        };
     }
-
-    async getTotalLocked(): Promise<string> {
-        return await this.contract.totalLocked();
+    
+    async getTotalLocked(): Promise<number> {
+        return this.formatBigInt(await this.contract.totalLocked());
     }
 
     async getRewardToken(): Promise<string> {
@@ -90,5 +97,18 @@ export class StakingSMAService {
 
     async getStakeToken(): Promise<string> {
         return await this.contract.stakeToken();
+    }
+
+    private formatBalance(balance: bigint, decimals = 18): number {
+        const formatted = Number(ethers.formatUnits(balance, decimals));
+        return formatted < 1 ? 0 : Math.round(formatted * 100) / 100;
+    }
+
+    private formatBigInt(value: bigint): number {
+        return (value && Number(value)) || 0;
+    }
+
+    private parseAmount(amount: string): ethers.BigNumberish {
+        return ethers.toBigInt(amount);
     }
 }
