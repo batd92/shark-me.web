@@ -10,8 +10,8 @@ export enum ChainId {
     // FANTOM = 250,
     // FANTOM_TESTNET = 4002,
     // XDAI = 100,
-    BSC = 56,
-    // BSC_TESTNET = 97,
+    BSC_MAINNET = 56,
+    BSC_TESTNET = 97,
     // ARBITRUM = 42161,
     // ARBITRUM_TESTNET = 79377087078960,
     // MOONBEAM_TESTNET = 1287,
@@ -34,3 +34,9 @@ export enum ChainId {
 }
 
 export const defaultChainId = 4;
+
+export const SUPPORTED_CHAINS = [
+    ChainId.BSC_MAINNET,
+    ChainId.BSC_TESTNET,
+    ChainId.SEPOLIA
+];

@@ -18,8 +18,8 @@ import { ChainId } from "@/lib/constants/chainId";
 import { useAccount } from 'wagmi'
 
 
-import { StakingSMAService } from "../../services/blockchains/staking_service";
-import { useTokenService } from "../../services/blockchains/sma_service";
+import { StakingSMAService } from "../../services/blockchains/staking";
+import { useTokenService } from "../../services/blockchains/sma";
 
 const APYRates = [
     { duration: '7 days', rate: '10%', lockTime: 604800 },

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAccount } from "wagmi";
 import { useRouter } from 'next/navigation';
 import { Box, Link, Grid, Heading, Text, Flex, RadioCards, Blockquote, Code } from "@radix-ui/themes";
-import { useTokenService } from "@/lib/services/blockchains/sma_service";
+import { useTokenService } from "@/lib/services/blockchains/sma";
 
 const erc20Functions = [
     { name: "name", description: "Returns the name of the token." },

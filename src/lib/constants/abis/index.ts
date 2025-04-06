@@ -1,3 +1,4 @@
 export { SharkMe } from './shark-me';
-export { Staking_ABI } from './staking';
+export { Staking } from './staking';
 export { Vesting } from './vesting';
+export { Course } from './course';
