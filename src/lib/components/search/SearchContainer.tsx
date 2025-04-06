@@ -8,7 +8,6 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { FaFilter } from 'react-icons/fa';
 
-import ItemContainer from '@/lib/components/item/ItemContainer';
 import { INITIAL_VALUES } from '@/lib/components/search/constants';
 import { Badge } from '@/lib/components/ui/badge';
 import { Button } from '@/lib/components/ui/button';
@@ -35,10 +34,8 @@ import {
     PopoverTrigger,
 } from '@/lib/components/ui/popover';
 import { ScrollArea } from '@/lib/components/ui/scroll-area';
-import { Skeleton } from '@/lib/components/ui/skeleton';
 import { useToast } from '@/lib/components/ui/use-toast';
 import type { SearchForm } from '@/lib/models/searchForm';
-import { useApiList } from '@/lib/services/publicapis/list/hooks';
 import { cn } from '@/lib/styles/utils';
 
 import type { SearchContainerProps } from './types';
@@ -47,13 +44,6 @@ const SearchContainer = ({ categories }: SearchContainerProps) => {
     const { toast } = useToast();
     const [isCategoryPopoverOpen, setIsCategoryPopoverOpen] =
         React.useState<boolean>(false);
-
-    const {
-        data: searchResult,
-        isMutating: isLoadingSearchResult,
-        trigger: searchAPI,
-        reset: resetList,
-    } = useApiList();
 
     const form = useForm<SearchForm>({
         defaultValues: INITIAL_VALUES,
@@ -80,18 +70,10 @@ const SearchContainer = ({ categories }: SearchContainerProps) => {
 
     const processSearch = async (values: SearchForm) => {
         const queries = pickBy(values.queryParams);
-        await searchAPI(queries).catch(() => {
-            toast({
-                title: 'Error',
-                description:
-                    'Error fetching data. Check your internet connection and try to refresh the page.',
-            });
-        });
     };
 
     const handleReset = () => {
         reset(INITIAL_VALUES);
-        resetList();
     };
     const handleSearch = handleSubmit(processSearch);
 
@@ -257,40 +239,6 @@ const SearchContainer = ({ categories }: SearchContainerProps) => {
                     ) : null}
                 </div>
             </div>
-
-            <div className="grid grid-cols-3 gap-4">
-                <Button
-                    disabled={searchButtonDisabled}
-                    className="col-span-2 w-full"
-                    onClick={handleSearch}
-                >
-                    {isLoadingSearchResult ? <ReloadIcon /> : null}
-                    Search
-                </Button>
-                <Button
-                    disabled={!isDirty}
-                    className="w-full"
-                    onClick={handleReset}
-                >
-                    Reset
-                </Button>
-            </div>
-
-            {isLoadingSearchResult ? (
-                <Skeleton className="my-4" />
-            ) : (
-                <>
-                    {searchResult?.entries ? (
-                        <ItemContainer
-                            entries={searchResult.entries}
-                            className="grid-cols-1 md:grid-cols-1 xl:grid-cols-1"
-                        />
-                    ) : null}
-                    {searchResult?.entries?.length === 0 ? (
-                        <p className="text-cneter">Not Found</p>
-                    ) : null}
-                </>
-            )}
         </Form>
     );
 };
