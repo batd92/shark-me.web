@@ -2,8 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useAccount, useChainId } from 'wagmi';
 import { useCourseService } from '@/lib/services/blockchains/course';
 import { formatEther, type Address } from 'viem';
-import { getAddressForChain } from '@/lib/constants/addresses';
-import { DEFAULT_COURSES } from '@/lib/constants/mockData';
+import { getAddressForChain } from '@/lib/config/addresses';
+import { DEFAULT_COURSES } from '@/lib/config/mockData';
 import { toast } from 'sonner';
 import {
     Box,
@@ -20,7 +20,7 @@ import {
 } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { useConnectModal } from '@rainbow-me/rainbowkit';
-import { SUPPORTED_CHAINS } from '@/lib/constants/chainId';
+import { SUPPORTED_CHAINS } from '@/lib/config/chainId';
 import { CourseInfo } from '@/lib/types/course';
 
 const CourseCard = ({ 

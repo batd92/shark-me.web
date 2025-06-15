@@ -11,6 +11,7 @@ const Routers = [
     { name: 'Staking', link: 'staking' },
     { name: 'DEX', link: 'dex' },
     { name: 'Course', link: 'course' },
+    { name: 'Admin', link: 'admin' },
 ];
 
 export const Home: React.FC = () => {
