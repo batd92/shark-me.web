@@ -6,7 +6,7 @@ export function useErc20Approve(tokenAddress: Address) {
     const { writeContract } = useWriteContract();
 
     const approve = async (spender: Address, amount: bigint): Promise<Hash | undefined> => {
-        const hash = await writeContract?.({
+        const hash = writeContract?.({
             address: tokenAddress,
             abi: erc20Abi,
             functionName: 'approve',

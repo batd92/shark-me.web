@@ -1,6 +1,6 @@
 import { useReadContract, useSimulateContract, useWriteContract } from 'wagmi';
 import { type Abi, Address } from 'viem';
-import { Vesting } from '@/lib/constants/abis';
+import { Vesting } from '@/lib/config/abis';
 
 export type VestingDetails = {
     totalAmount: bigint;

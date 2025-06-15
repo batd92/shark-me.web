@@ -1,10 +1,9 @@
 import { useReadContract, useWriteContract } from 'wagmi';
-import { type Abi, Address, parseEther } from 'viem';
-import { Course } from '@/lib/constants/abis';
+import { type Abi, Address, parseEther, getContract } from 'viem';
+import { Course } from '@/lib/config/abis';
 import { type CourseInfo } from '@/lib/types/course';
 import { toast } from 'sonner';
 import { useErc20Approve } from '@/lib/hooks/useToken';
-import { SUPPORTED_CHAINS } from '@/lib/constants/chainId';
 
 export type PurchaseInfo = {
     purchaseTimestamp: bigint;
@@ -52,7 +51,10 @@ export function useCourseService(contractAddress: Address, usdtAddress: Address,
             address: contractAddress,
             abi: Course as Abi,
             functionName: 'courseCatalog',
-            args: [BigInt(courseId)]
+            args: [BigInt(courseId)],
+            query: {
+                enabled: courseId > 0
+            }
         });
     };
 

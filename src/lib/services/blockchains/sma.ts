@@ -1,10 +1,10 @@
 import { useAccount, useReadContract, useWriteContract } from 'wagmi';
-import { SharkMe } from "@/lib/constants/abis";
+import { SharkMe } from "@/lib/config/abis";
 import { ethers } from 'ethers';
-import { APP_ADDRESSES } from '@/lib/constants/addresses';
-import { ChainId } from '@/lib/constants/chainId';
+import { getAddressForChain } from '@/lib/config/addresses';
+import { ChainId } from '@/lib/config/chainId';
 
-const addressSMA = APP_ADDRESSES[ChainId.SEPOLIA]["SMA"] as `0x${string}`;
+const addressSMA = getAddressForChain(ChainId.SEPOLIA);
 
 export function useTokenService() {
     const { address } = useAccount();
@@ -16,7 +16,7 @@ export function useTokenService() {
     };
 
     const { data: balanceData, isLoading, isError } = useReadContract({
-        address: addressSMA,
+        address: addressSMA.SMA,
         abi: SharkMe,
         functionName: "balanceOf",
         args: [address],
@@ -35,7 +35,7 @@ export function useTokenService() {
 
             writeContract({
                 abi: SharkMe,
-                address: addressSMA,
+                address: addressSMA.SMA,
                 functionName: 'approve',
                 args: [address, parsedAmount],
             });
@@ -55,7 +55,7 @@ export function useTokenService() {
     };
 
     const { data: nameData } = useReadContract({
-        address: addressSMA,
+        address: addressSMA.SMA,
         abi: SharkMe,
         functionName: 'name',
     });
@@ -64,9 +64,8 @@ export function useTokenService() {
         return nameData || 'Unknown';
     };
 
-    // Get total supply
     const { data: totalSupplyData } = useReadContract({
-        address: addressSMA,
+        address: addressSMA.SMA,
         abi: SharkMe,
         functionName: 'totalSupply',
     });
@@ -75,9 +74,8 @@ export function useTokenService() {
         return formatBalance(totalSupplyData as any) || 0;
     };
 
-    // Get owner of the token
     const { data: ownerData } = useReadContract({
-        address: addressSMA,
+        address: addressSMA.SMA,
         abi: SharkMe,
         functionName: 'owner',
     });
@@ -86,9 +84,8 @@ export function useTokenService() {
         return ownerData || 'Unknown';
     };
 
-    // Get token symbol
     const { data: symbolData } = useReadContract({
-        address: addressSMA,
+        address: addressSMA.SMA,
         abi: SharkMe,
         functionName: 'symbol',
     });
@@ -97,14 +94,13 @@ export function useTokenService() {
         return symbolData || 'Unknown';
     };
 
-    // Transfer tokens to another address
     const transfer = (to: string, amount: string): boolean => {
         try {
             const parsedAmount = ethers.toBigInt(amount);
 
             writeContract({
                 abi: SharkMe,
-                address: addressSMA,
+                address: addressSMA.SMA,
                 functionName: 'transfer',
                 args: [to, parsedAmount],
             });
@@ -116,14 +112,13 @@ export function useTokenService() {
         }
     };
 
-    // Transfer tokens from one address to another
     const transferFrom = (from: string, to: string, amount: string): boolean => {
         try {
             const parsedAmount = ethers.toBigInt(amount);
 
             writeContract({
                 abi: SharkMe,
-                address: addressSMA,
+                address: addressSMA.SMA,
                 functionName: 'transferFrom',
                 args: [from, to, parsedAmount],
             });

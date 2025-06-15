@@ -1,5 +1,5 @@
 import { Contract, Interface } from "ethers";
-import { ChainId, defaultChainId } from "../constants/chainId";
+import { ChainId } from "../config/chainId";
 import { Providers } from "../config/providers";
 import { useMemo } from "react";
 
